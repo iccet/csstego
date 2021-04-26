@@ -1,0 +1,6 @@
+[submodule "lib/stego"]
+	path = lib/stego
+	url = https://github.com/iccet/stego-lib.git
+[submodule "dataset"]
+	path = dataset
+	url = https://github.com/iccet/stego-dataset.git

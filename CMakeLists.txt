@@ -4,6 +4,10 @@ project(CsStg)
 
 include(GenerateExportHeader)
 
+set(LIB_DIR "${PROJECT_SOURCE_DIR}/lib")
+
+add_subdirectory(${LIB_DIR})
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)

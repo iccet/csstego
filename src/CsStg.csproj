@@ -14,9 +14,8 @@
 
     <PropertyGroup>
         <Cmake>cmake</Cmake>
-        <CsStgDir>csstego</CsStgDir>
         <DepsFIle>$(CsStgDir)/deps.txt</DepsFIle>
-        <StgProjectDir>$(MSBuildProjectDirectory)/../..</StgProjectDir>
+        <StgProjectDir>$(MSBuildProjectDirectory)/..</StgProjectDir>
     </PropertyGroup>
     
     <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
@@ -34,7 +33,7 @@
         <Message Text="Building $(MSBuildProjectName) extension" Importance="normal" />
         
         <Exec Command="$(Cmake) -DCMAKE_INSTALL_PREFIX=$([System.IO.Path]::GetFullPath('$(OutputPath)')) $(StgProjectDir)" WorkingDirectory="$(OutputPath)" />
-        <Exec Command="$(Cmake) --build $(CsStgDir) --target $(MSBuildProjectName) --config $(Configuration)" WorkingDirectory="$(OutputPath)" />
+        <Exec Command="$(Cmake) --build . --target $(MSBuildProjectName) --config $(Configuration)" WorkingDirectory="$(OutputPath)" />
 
     </Target>
 

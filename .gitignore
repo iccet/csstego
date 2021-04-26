@@ -37,5 +37,6 @@ msbuild.wrn
 # Visual Studio 2015
 .vs/
 
+*build*
 *[Gg]enerated*
 *[Gg]en*

@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\..\tests\shared_data\SharedData.csproj" />
+        <ProjectReference Include="..\..\dataset\SharedData.csproj" />
         <ProjectReference Include="..\..\src\CsStg.csproj" />
     </ItemGroup>
 
