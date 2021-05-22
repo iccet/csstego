@@ -1,0 +1,69 @@
+name: Publish CsStg
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  NUGET_SOURCE: https://nuget.pkg.github.com/iccet/index.json
+  NUGET_USER: ${{ secrets.NUGET_USER }}
+  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+  BUILD_TYPE: Release
+  NUGET_PACKAGE_PATH: /opt/package
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+        
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.workspace }}/Qt
+          key: ${{ runner.os }}-QtCache
+
+      - name: Install boost
+        uses: MarkusJx/install-boost@v1.0.1
+        id: install-boost
+        with:
+          boost_version: 1.73.0
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+
+      - name: Create Build Environment
+        run: cmake -E make_directory ${{github.workspace}}/build
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+
+      - name: Restore with GitHub Nuget registry
+        run: |
+          dotnet nuget locals all --clear
+          dotnet nuget add source ${NUGET_SOURCE} -n iccet -u ${NUGET_USER} -p ${NUGET_API_KEY} --store-password-in-clear-text
+          rm -rf ~/.nuget
+          dotnet restore
+
+      - name: Pack
+        run: dotnet pack -c ${BUILD_TYPE} -o ${NUGET_PACKAGE_PATH}
+        env:
+          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
+
+      - name: Publish
+        run: dotnet nuget push ${NUGET_PACKAGE_PATH}/CsStg.*.nupkg -s ${NUGET_SOURCE} -k ${NUGET_API_KEY}
