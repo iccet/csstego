@@ -40,3 +40,5 @@ msbuild.wrn
 *build*
 *[Gg]enerated*
 *[Gg]en*
+
+nuget.config

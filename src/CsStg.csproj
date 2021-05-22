@@ -1,16 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageLicenseFile>../LICENSE</PackageLicenseFile>
-        <PackageReadmeFile>../README.md</PackageReadmeFile>
+        <IsPackable>true</IsPackable>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <Version>0.0.1</Version>
+        <PackageDescription>C# stego lib adapter</PackageDescription>
+        <RepositoryUrl>https://github.com/iccet/csstego</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        
         <BuildDependsOn>
             BuildCsStgExtension;
             $(BuildDependsOn);
         </BuildDependsOn>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../LICENSE">
+            <Pack>true</Pack>
+            <PackagePath/>
+        </None>
+        <None Include="../README.md">
+            <Pack>true</Pack>
+            <PackagePath/>
+        </None>
+    </ItemGroup>
 
     <PropertyGroup>
         <Cmake>cmake</Cmake>
@@ -23,9 +38,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
-        <PackageReference Include="xunit.assert" Version="2.4.0" />
-        <PackageReference Include="xunit.extensibility.core" Version="2.4.0" />
         <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
     </ItemGroup>
 
@@ -42,7 +54,17 @@
             <Output TaskParameter="Lines" ItemName="Deps" />
         </ReadLinesFromFile>
 
-        <Copy SourceFiles="@(Deps)" DestinationFolder="$(OutputPath)"/>
+        <Copy SourceFiles="@(Deps)" DestinationFolder="$(OutputPath)" />
     </Target>
 
+    <ItemGroup>
+        <Content Include="$(OutputPath)/*.so*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <PackageCopyToOutput>true</PackageCopyToOutput>
+
+            <IncludeInPackage>true</IncludeInPackage>
+            <PackagePath>lib/$(TargetFramework)</PackagePath>
+        </Content>
+    </ItemGroup>
+    
 </Project>
